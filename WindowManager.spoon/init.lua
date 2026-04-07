@@ -1,8 +1,6 @@
 --- === WindowManager ===
 ---
---- Snaps windows to common screen positions.
---- Supports: left half, right half, top half, bottom half,
----           fullscreen, center, left/center/right thirds.
+--- Snaps windows to the left or right half of the screen.
 ---
 --- Author: Saguaro Prole
 --- License: MIT
@@ -22,88 +20,40 @@ obj._hotkeys = {}
 function obj:init()
 end
 
--- ─── Helper ──────────────────────────────────────────────────────────────────
-
-local function setFrame(unit)
+--- WindowManager:snapLeft()
+--- Snaps the focused window to the left half of the current screen.
+function obj:snapLeft()
     local win = hs.window.focusedWindow()
     if not win then return end
-    local max = win:screen():frame() -- usable area (excludes menu bar / dock)
-
-    local f = {}
-    f.x = max.x + (unit.x * max.w)
-    f.y = max.y + (unit.y * max.h)
-    f.w = unit.w * max.w
-    f.h = unit.h * max.h
-
-    win:setFrame(f, 0) -- 0 = no animation
+    local max = win:screen():frame()
+    win:setFrame({ x = max.x, y = max.y, w = max.w / 2, h = max.h }, 0)
 end
 
--- ─── Positions ───────────────────────────────────────────────────────────────
-
-function obj:snapLeft()
-    setFrame({ x = 0, y = 0, w = 0.5, h = 1 })
-end
-
+--- WindowManager:snapRight()
+--- Snaps the focused window to the right half of the current screen.
 function obj:snapRight()
-    setFrame({ x = 0.5, y = 0, w = 0.5, h = 1 })
+    local win = hs.window.focusedWindow()
+    if not win then return end
+    local max = win:screen():frame()
+    win:setFrame({ x = max.x + max.w / 2, y = max.y, w = max.w / 2, h = max.h }, 0)
 end
 
-function obj:snapTop()
-    setFrame({ x = 0, y = 0, w = 1, h = 0.5 })
-end
-
-function obj:snapBottom()
-    setFrame({ x = 0, y = 0.5, w = 1, h = 0.5 })
-end
-
+--- WindowManager:snapFull()
+--- Snaps the focused window to fill the entire screen.
 function obj:snapFull()
-    setFrame({ x = 0, y = 0, w = 1, h = 1 })
+    local win = hs.window.focusedWindow()
+    if not win then return end
+    local max = win:screen():frame()
+    win:setFrame({ x = max.x, y = max.y, w = max.w, h = max.h }, 0)
 end
-
-function obj:snapCenter()
-    setFrame({ x = 0.1, y = 0.1, w = 0.8, h = 0.8 })
-end
-
-function obj:snapLeftThird()
-    setFrame({ x = 0, y = 0, w = 1 / 3, h = 1 })
-end
-
-function obj:snapCenterThird()
-    setFrame({ x = 1 / 3, y = 0, w = 1 / 3, h = 1 })
-end
-
-function obj:snapRightThird()
-    setFrame({ x = 2 / 3, y = 0, w = 1 / 3, h = 1 })
-end
-
--- ─── Hotkey Binding ──────────────────────────────────────────────────────────
 
 --- WindowManager:bindHotkeys(mapping)
---- Binds hotkeys for WindowManager actions.
----
---- Example mapping:
----   {
----     left        = { {"ctrl","alt"}, "left"  },
----     right       = { {"ctrl","alt"}, "right" },
----     top         = { {"ctrl","alt"}, "up"    },
----     bottom      = { {"ctrl","alt"}, "down"  },
----     full        = { {"ctrl","alt"}, "f"     },
----     center      = { {"ctrl","alt"}, "c"     },
----     leftThird   = { {"ctrl","alt"}, "1"     },
----     centerThird = { {"ctrl","alt"}, "2"     },
----     rightThird  = { {"ctrl","alt"}, "3"     },
----   }
+--- Parameters:
+---  * mapping - e.g. { left = {{"ctrl","alt"}, "left"}, right = {{"ctrl","alt"}, "right"} }
 function obj:bindHotkeys(mapping)
     local spec = {
-        left        = hs.fnutils.partial(self.snapLeft, self),
-        right       = hs.fnutils.partial(self.snapRight, self),
-        top         = hs.fnutils.partial(self.snapTop, self),
-        bottom      = hs.fnutils.partial(self.snapBottom, self),
-        full        = hs.fnutils.partial(self.snapFull, self),
-        center      = hs.fnutils.partial(self.snapCenter, self),
-        leftThird   = hs.fnutils.partial(self.snapLeftThird, self),
-        centerThird = hs.fnutils.partial(self.snapCenterThird, self),
-        rightThird  = hs.fnutils.partial(self.snapRightThird, self),
+        left  = hs.fnutils.partial(self.snapLeft, self),
+        right = hs.fnutils.partial(self.snapRight, self),
     }
     hs.spoons.bindHotkeysToSpec(spec, mapping)
     return self
