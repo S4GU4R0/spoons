@@ -1,8 +1,13 @@
 -- ==========================================
--- RabbitLog: Documenting the rabbit hole
+-- Rabbit Log: Documenting the rabbit hole
 -- ==========================================
 
-local logFilePath = "PATH/TO/rabbit_log.csv"
+local obj = {}
+
+function obj:init()
+end
+
+local logFilePath = "/Volumes/HD/AI/Main_Street/Ira/Office/FrontDoor/Desk/Desktop/rabbit_log.csv"
 
 local cmdWHotkey
 
@@ -12,26 +17,35 @@ chooser = hs.chooser.new(function(result)
   -- Always re-enable hotkey first
   if cmdWHotkey then cmdWHotkey:enable() end
 
-  -- If result is nil, user hit ESC (Cancel)
-  if not result then
+  -- Get the state of the app we were closing
+  local savedState = hs.settings.get("rabbitLogState")
+  if not savedState or not savedState.bundleID then
     chooser:hide()
     return
   end
 
-  -- 2. Safe Execution Wrapper
-  -- This catches any errors so the chooser doesn't get stuck
-  local status, err = pcall(function()
-    local savedState = hs.settings.get("rabbitLogState")
+  local targetApp = hs.application.get(savedState.bundleID)
+  local title = savedState.title
 
-    -- If we lost the state data (shouldn't happen, but safety first)
-    if not savedState or not savedState.bundleID then
-      hs.alert.show("Error: Could not identify the app.")
-      return
+  -- Helper to perform the final close operation
+  local function closeTab()
+    if targetApp then
+      targetApp:activate()
+      hs.timer.doAfter(0.1, function()
+        hs.eventtap.keyStroke({ "cmd" }, "w", targetApp)
+      end)
     end
+  end
 
-    local targetApp = hs.application.get(savedState.bundleID)
-    local title = savedState.title
+  -- 1. If result is nil, user hit ESC (Cancel)
+  if not result then
+    chooser:hide()
+    closeTab() -- Close it anyway as requested
+    return
+  end
 
+  -- 2. Safe Execution Wrapper for Logging
+  local status, err = pcall(function()
     if not targetApp then return end
 
     -- 3. Log Data
@@ -48,10 +62,7 @@ chooser = hs.chooser.new(function(result)
     end
 
     -- 4. Focus & Close
-    targetApp:activate()
-    hs.timer.doAfter(0.1, function()
-      hs.eventtap.keyStroke({ "cmd" }, "w", targetApp)
-    end)
+    closeTab()
 
     -- Visual Feedback
     hs.alert.show("Logged!")
@@ -101,7 +112,7 @@ chooser:searchSubText(true)
 chooser:queryChangedCallback(function(query)
   chooser:choices({
     {
-      text = "Log & Close",
+      text = "Log",
       subText = "Save: " .. (query or "Empty entry")
     }
   })
@@ -133,3 +144,5 @@ cmdWHotkey = hs.hotkey.bind({ "cmd" }, "w", function()
   -- Show the chooser (the queryChangedCallback will populate the list immediately)
   chooser:show()
 end)
+
+return obj
