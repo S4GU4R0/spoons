@@ -1,0 +1,57 @@
+[
+  {
+    "name": "WindowManager",
+    "type": "Spoon",
+    "desc": "Snaps windows to the left or right half of the screen.",
+    "items": [
+      {
+        "name": "snapLeft",
+        "type": "Method",
+        "signature": "WindowManager:snapLeft()",
+        "desc": "Snaps the focused window to the left half of the current screen.",
+        "returns": [
+          "None"
+        ]
+      },
+      {
+        "name": "snapRight",
+        "type": "Method",
+        "signature": "WindowManager:snapRight()",
+        "desc": "Snaps the focused window to the right half of the current screen.",
+        "returns": [
+          "None"
+        ]
+      },
+      {
+        "name": "bindHotkeys",
+        "type": "Method",
+        "signature": "WindowManager:bindHotkeys(mapping)",
+        "desc": "Binds hotkeys for WindowManager actions.",
+        "parameters": [
+          " * mapping - A table where keys are action names (\"left\", \"right\") and values are hotkey specs (e.g. `{\"ctrl\", \"opt\"}, \"left\"`)"
+        ],
+        "returns": [
+          "The WindowManager object"
+        ]
+      },
+      {
+        "name": "start",
+        "type": "Method",
+        "signature": "WindowManager:start()",
+        "desc": "Starts the Spoon (nothing to do as hotkeys are handled via bindHotkeys).",
+        "returns": [
+          "The WindowManager object"
+        ]
+      },
+      {
+        "name": "stop",
+        "type": "Method",
+        "signature": "WindowManager:stop()",
+        "desc": "Stops the Spoon.",
+        "returns": [
+          "The WindowManager object"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "name": "RabbitHole",
+    "type": "Spoon",
+    "desc": "Focus-preserving exit logging: Captures context before closing tabs or windows.",
+    "items": [
+      {
+        "name": "logPath",
+        "type": "Variable",
+        "desc": "String containing the path to the CSV file where the \"rabbit hole\" notes are saved."
+      },
+      {
+        "name": "start",
+        "type": "Method",
+        "signature": "RabbitHole:start()",
+        "desc": "Activates the RabbitHole watcher/hotkey logic.",
+        "returns": [
+          "The RabbitHole object"
+        ]
+      },
+      {
+        "name": "stop",
+        "type": "Method",
+        "signature": "RabbitHole:stop()",
+        "desc": "Deactivates the RabbitHole watcher/hotkey logic.",
+        "returns": [
+          "The RabbitHole object"
+        ]
+      },
+      {
+        "name": "bindHotkeys",
+        "type": "Method",
+        "signature": "RabbitHole:bindHotkeys(mapping)",
+        "desc": "Binds hotkeys for RabbitHole actions.",
+        "parameters": [
+          " * mapping - A table where keys are action names (\"log\") and values are hotkey specs."
+        ],
+        "returns": [
+          "The RabbitHole object"
+        ]
+      }
+    ]
+  }
+]
