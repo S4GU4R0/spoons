@@ -39,12 +39,11 @@ function obj:snapRight()
 end
 
 --- WindowManager:snapFull()
---- Snaps the focused window to fill the entire screen.
+--- Maximizes the focused window to fill the screen.
 function obj:snapFull()
     local win = hs.window.focusedWindow()
     if not win then return end
-    local max = win:screen():frame()
-    win:setFrame({ x = max.x, y = max.y, w = max.w, h = max.h }, 0)
+    win:maximize(0)
 end
 
 --- WindowManager:bindHotkeys(mapping)
