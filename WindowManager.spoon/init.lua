@@ -54,6 +54,7 @@ function obj:bindHotkeys(mapping)
     local spec = {
         left  = hs.fnutils.partial(self.snapLeft, self),
         right = hs.fnutils.partial(self.snapRight, self),
+        full  = hs.fnutils.partial(self.snapFull, self),
     }
     hs.spoons.bindHotkeysToSpec(spec, mapping)
     return self
