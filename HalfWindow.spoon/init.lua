@@ -10,8 +10,8 @@ obj.__index = obj
 -- Metadata
 obj.name = "WindowManager"
 obj.version = "1.0.0"
-obj.author = "Ira Sanchez & Manus AI"
-obj.homepage = "https://github.com/yourusername/spoons"
+obj.author = "Ira Sanchez"
+obj.homepage = "https://github.com/S4GU4R0/spoons"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 -- Internal Storage
